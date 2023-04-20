@@ -1,0 +1,192 @@
+// shows existing databases
+
+show dbs
+
+// databases will not exist untill a collection has been created
+use ("moviedatabase");
+db.createCollection('movies')
+
+// Delete a database 
+use('moviedatabase');
+db.dropDatabase();
+
+
+// Inserting documents into collection
+use("moviedatabase");
+
+db.movies.insertOne({
+  title: 'The Shawshank Redemption',
+  genre: 'Drama',
+  certificate: 15,
+  rating: 9.3,
+  tags: ['prison', 'escape']
+})
+
+
+// Inserting multiple documents into colletion
+use("moviedatabase");
+
+db.movies.insertMany([
+  {
+    title: 'Schindlers List',
+    genre: ['Biography', 'Drama', 'History'],
+    certificate: 15,
+    rating: 9.0,
+    tags: ['accountant', 'villa', 'womanizer']
+  },
+  {
+    title: "Forrest Gump",
+    genre: ['Drama', 'Romance'],
+    certificate: 12,
+    rating: 8.8,
+    tags: ['vietnam war', 'shrimp boat']
+  },
+  {
+    title: "Inception",
+    genre: ['Action', 'Adventure', 'Sci-Fi'],
+    certificate: '12A',
+    rating: 8.8,
+    tags: ['dream', 'mindbender', 'subconscious']
+  },
+  {
+    title: "Monsters, Inc",
+    genre: ['Animation', 'Adventure', 'Comedy'],
+    certificate: 'U',
+    rating: 8.1,
+    tags: ['monster', 'scream', 'portal door']
+  }
+])
+
+
+// Finds all documents in the Posts collection
+use("moviedatabase");
+
+db.movies.find()
+
+// Finds documents with query
+use("moviedatabase");
+
+db.movies.find({ genre: 'Adventure' })
+
+// Find() method with 'AND' condition
+use("moviedatabase");
+db.movies.find({ genre: 'Adventure', certificate :'U' })
+
+
+// Find() method with 'OR' condition
+use("moviedatabase");
+db.movies.find({$or:[{ genre: 'Adventure'}, {certificate :12 }]})
+
+// Sorting documents
+// Ascending 
+use("moviedatabase");
+db.movies.find().sort({ title: 1 })
+
+//Descending
+use("moviedatabase");
+db.movies.find().sort({ title: -1 })
+
+// Count Documents
+use("moviedatabase");
+db.movies.find().count()
+
+// Count number of movies in the genre Drama
+use("moviedatabase");
+db.movies.find({ genre: 'Drama' }).count()
+
+// Limit Documents - returns the first 4 documents 
+use("moviedatabase");
+db.movies.find().limit(4)
+
+// Chaining - chain on multiple methods
+// This example will find the first two titles and sort in ascending order
+use("moviedatabase");
+db.movies.find().limit(2).sort({ title: 1 })
+
+
+// Find one Document - returns the first match
+use("moviedatabase");
+db.movies.findOne({ rating: { $gt: 3 } })
+
+// Update document
+// $ ensures only the rating is updated
+use("moviedatabase");
+
+db.movies.updateOne({ title: 'Monsters, Inc' },
+{
+  $set: {
+    rating: 9.0
+  }
+})
+
+// Update document or insert if not found
+use("moviedatabase");
+db.movies.updateOne({ title: 'Gone Girl' },
+{
+  $set: {
+    title: 'Gone Girl',
+    genre: ['Drama', 'Mystery', 'Thriller'],
+    certificate: 18,
+    rating: 8.1,
+    tags: ['missing person', 'disappearance', 'murder']
+  }
+},
+{
+  upsert: true
+})
+
+
+
+// Increment field $inc
+use("moviedatabase");
+db.movies.updateOne({ title: 'Monsters, Inc' },
+{
+  $inc: {
+    rating: 2
+  }
+})
+
+// Update multiple documents
+use("moviedatabase");
+
+db.movies.updateMany({}, 
+{
+  $inc: {
+    rating: 1
+  }
+})
+
+// Rename field
+use("moviedatabase");
+
+db.movies.updateOne({ title: 'Gone Girl' },
+{
+  $rename: {
+    rating: 'IMDB Rating'
+  }
+})
+
+// Greater than & less than
+use("moviedatabase");
+db.movies.find({ rating: { $gt: 10 } })
+
+use("moviedatabase");
+db.movies.find({ rating: { $gte: 9.3 } })
+
+use("moviedatabase");
+db.movies.find({ rating: { $lt: 10 } })
+
+use("moviedatabase");
+db.movies.find({ rating: { $lte: 10 } })
+
+// Delete a document
+use("moviedatabase");
+db.movies.deleteOne({ title: 'Gone Girl' })
+
+// Delete multiple documents
+
+use("moviedatabase");
+db.movies.deleteMany({ genre: 'Drama' })
+
+
+
